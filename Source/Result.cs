@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AoC_2024
+{
+    internal struct Result
+    {
+        string name;
+        double execution_time;
+        private long part_01;
+        private long part_02;
+
+        public Result(string name, long part_01, long part_02, double execution_time) : this()
+        {
+            this.name = name;
+            this.part_01 = part_01;
+            this.part_02 = part_02;
+            this.execution_time = execution_time;
+        }
+
+        public override readonly string ToString()
+        {
+            StringBuilder sb = new();
+            sb.Append("||");
+            sb.Append(name.PadRight(23));
+            sb.Append("||");
+            sb.Append( part_01.ToString().PadRight(12));
+            sb.Append("||");
+            sb.Append(part_02.ToString().PadRight(15));
+            sb.Append("||");
+            sb.Append(execution_time.ToString().PadRight(10));
+            sb.Append("||");
+            return sb.ToString();
+
+        }
+    }
+}
