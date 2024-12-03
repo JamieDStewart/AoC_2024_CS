@@ -120,7 +120,7 @@ namespace AoC_2024
             sw.Stop();
 
             double time = sw.ElapsedMilliseconds / 1000.0;
-            return new Result(name: "Day 02", part_01: part_01, part_02: part_02, execution_time: time);
+            return new Result(name: "2.Red-Nosed Reports", part_01: part_01, part_02: part_02, execution_time: time);
         }
     }
 }
