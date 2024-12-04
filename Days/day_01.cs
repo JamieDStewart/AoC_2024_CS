@@ -20,10 +20,10 @@ namespace AoC_2024
         private Input ReadFileData()
         {
             Input input = new Input();
-            using (StreamReader read = new StreamReader("./input/day_01.txt"))
+            using (var read = new StreamReader("./input/day_01.txt"))
             {
-                string line;
-                while ((line = read.ReadLine()) != null)
+
+                for (var line = read.ReadLine(); line != null; line = read.ReadLine())
                 {
                     string[] lineContent = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                     if (lineContent.Length == 2)

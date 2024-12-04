@@ -10,22 +10,25 @@ namespace AoC_2024
     {       
         static void Main(string[] args)
         {
-            //Get all days from this assembly
+            //Get all days from this assembly - means I can just add a new DayXX : IDay class and not worry about editing this main function
             var iDay = typeof(IDay);
-            var dayTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany( assembly=> assembly.GetTypes().Where( type => iDay.IsAssignableFrom(type) && type.IsClass) );
+            var dayTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany( assembly => assembly.GetTypes()
+                .Where( type => iDay.IsAssignableFrom(type) && type.IsClass) );
             List<IDay> days = new List<IDay>();
+            //Get an instance of each day and shove it in the list
             foreach ( var day in dayTypes )
             {
-                days.Add(Activator.CreateInstance(day) as IDay);
+                var instance = Activator.CreateInstance(day) as IDay;
+                if( instance != null ) {days.Add(instance);}
             }
 
+            //Go over all days in the list and Solve them!
             List<Result> results = new List<Result>();
-            
             foreach ( var day in days ) 
             {
                 results.Add(day.Solve());
             }
-
+            //Display the answers to the console
             PrintTitleBar();
             foreach ( var result in results )
             {

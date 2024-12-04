@@ -29,22 +29,23 @@ namespace AoC_2024
             }
             return input;
         }
-
+        //Input is just a vector of strings read directly from the day's input text file
         private long SolvePart1(Input input)
         {
             var summed_mul_operations = 0L;
+            //use a regular expression to get each mul(x,y) instruction out of the data
+            //Use groups to separate out the values to make converting them simple
+            const string pattern = @"mul\(([0-9]{1,3})\,([0-9]{1,3})\)";
+            Regex regex = new(pattern);
+
             foreach (var instruction in input.instructions)
             {
-                //use a regular expression to get each mul(x,y) instruction out of the data
-                string pattern = @"(mul)\([0-9]{1,3}\,[0-9]{1,3}\)";
-                Regex regex = new(pattern);
-
                 MatchCollection matches = regex.Matches(instruction);
                 foreach (Match match in matches)
                 {
-                    //Just use Regex again to extract the numbers
-                    var values = Regex.Split(match.Value, @"\D+").Where(s => s != String.Empty).ToArray();
-                    summed_mul_operations += long.Parse(values[0]) * long.Parse(values[1]);
+                    var x = long.Parse(match.Groups[1].Value);
+                    var y = long.Parse(match.Groups[2].Value);
+                    summed_mul_operations += x * y;
                 }
             }
             return summed_mul_operations;
@@ -52,46 +53,34 @@ namespace AoC_2024
 
         private long SolvePart2(Input input)
         {
-            var summed_mul_operations = 0L;
+            var summedMulOperations = 0L;
             //Instructions all have different lengths do = 4, dont = 7 (minimum length mul = 8)
-            var do_instruction_length = 4;
-            var dont_instruction_length = 7;
+            const long doInstructionLength = 4;
+            const long dontInstructionLength = 7;
 
             // introduction of do() and don't() operators
-            bool skip = false;
+            var skip = false; //skip instruction carries over each line
+            //use a regular expression to get each mul(x,y) instruction out of the data
+            const string pattern = @"mul\(([0-9]{1,3})\,([0-9]{1,3})\)|don't\(\)|do\(\)";
+            Regex regex = new(pattern);
+
             foreach (var instruction in input.instructions)
             {
-                //use a regular expression to get each mul(x,y) instruction out of the data
-                string pattern = @"(mul)\([0-9]{1,3}\,[0-9]{1,3}\)|don't\(\)|do\(\)";
-                Regex regex = new(pattern);
-
                 MatchCollection matches = regex.Matches(instruction);
                 
                 foreach (Match match in matches)
                 {
-                    if (match.Value.Length == do_instruction_length)
-                    {
-                        skip = false;
-                        continue;
-                    }
-                    if (match.Value.Length == dont_instruction_length)
-                    {
-                        skip = true;
-                        continue;
-                    }
+                    if (match.Value.Length == doInstructionLength) { skip = false; continue; }
+                    if (match.Value.Length == dontInstructionLength) { skip = true; continue; }
+                    if (skip) { continue; }
 
-                    if (skip)
-                    {
-                        continue;
-                    }
-                    //Just use Regex again to extract the numbers
-                    var values = Regex.Split(match.Value, @"\D+").Where(s => s != String.Empty).ToArray();
-                    summed_mul_operations += long.Parse(values[0]) * long.Parse(values[1]);
-                    
+                    var x = long.Parse(match.Groups[1].Value);
+                    var y = long.Parse(match.Groups[2].Value);
+                    summedMulOperations += x * y;
+
                 }
             }
-
-            return summed_mul_operations;
+            return summedMulOperations;
         }
         public Result Solve()
         {

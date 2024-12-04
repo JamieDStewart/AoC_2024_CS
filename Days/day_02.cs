@@ -18,10 +18,10 @@ namespace AoC_2024
         private List<Record> ReadFileData()
         {
             List<Record> input = new();
-            using (StreamReader read = new StreamReader("./input/day_02.txt"))
+            using (var read = new StreamReader("./input/day_02.txt"))
             {
-                string line;
-                while ((line = read.ReadLine()) != null)
+
+                for (var line = read.ReadLine(); line != null; line = read.ReadLine())
                 {
                     List<long> values = new();
                     string[] lineContent = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
