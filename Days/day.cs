@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AoC_2024;
 
-namespace AoC_2024
+internal interface IDay
 {
-    interface IDay
-    {
-        Result Solve();
-    }
+    Result Solve();
 }
