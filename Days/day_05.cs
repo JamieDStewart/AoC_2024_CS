@@ -12,13 +12,13 @@ internal class Day_05 : IDay
         //Read input
         var up = ReadFileData();
         //carry out tasks
-        var part_01 = SolvePart1(up);
-        var part_02 = SolvePart2(up);
+        var part01 = SolvePart1(up);
+        var part02 = SolvePart2(up);
 
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("5.Print Queue", part_01, part_02, time);
+        return new Result("5.Print Queue", part01, part02, time);
     }
 
     private Updates ReadFileData()
@@ -74,17 +74,10 @@ internal class Day_05 : IDay
             foreach (var page in printJob)
             {
                 //get the page rules from the update
-                if (up.pageOrderingRules.ContainsKey(page))
+                if ( up.pageOrderingRules.TryGetValue(page, out var rules))
                 {
-                    var rules = up.pageOrderingRules[page];
                     //iterate over all rules and ensure they're not already in the printJob pages
-                    foreach (var r in rules)
-                        if (pages[r])
-                        {
-                            validJob = false;
-                            break;
-                        }
-
+                    validJob = !rules.Any(r => pages[r]);
                     if (!validJob)
                     {
                         //might as well make a small modification to part 1 to collect the invalid jobs for part 2.
@@ -113,24 +106,19 @@ internal class Day_05 : IDay
             var sortedList = new List<int>();
             //for each page in the job if a page has already been printed that breaks the rule find that page in the job and swap them
             foreach (var page in invalidJob)
-                if (up.pageOrderingRules.ContainsKey(page))
+            {
+                if (up.pageOrderingRules.TryGetValue(page, out var rules))
                 {
-                    var rules = up.pageOrderingRules[page];
-                    var lowestIndex = sortedList.Count;
-                    foreach (var r in rules)
-                        if (sortedList.Contains(r))
-                        {
-                            var index = sortedList.IndexOf(r);
-                            lowestIndex = index < lowestIndex ? index : lowestIndex;
-                        }
+                    var lowestIndex = sortedList.IndexOf(sortedList.FirstOrDefault(v => rules.Contains(v)));
+                    if (lowestIndex >= 0)
+                    {
+                        sortedList.Insert(lowestIndex, page);
+                        continue;
+                    }
 
-                    sortedList.Insert(lowestIndex, page);
                 }
-                else
-                {
-                    sortedList.Add(page);
-                }
-
+                sortedList.Add(page);
+            }
             count += sortedList[sortedList.Count / 2];
         }
 
