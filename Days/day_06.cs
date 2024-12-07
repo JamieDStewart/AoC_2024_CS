@@ -29,7 +29,7 @@ internal class Day_06 : IDay
     private MapData ReadFileData()
     {
         MapData md = new();
-        using (var read = new StreamReader("./sample/day_06.txt"))
+        using (var read = new StreamReader("./input/day_06.txt"))
         {
             int y = 0;
             for (var line = read.ReadLine(); line != null; line = read.ReadLine())
@@ -114,12 +114,13 @@ internal class Day_06 : IDay
     {
         //add in a blocker at indexes in the has set and see if a loop is present in the new map
         var count = 0;
-
+        Tuple<int, int> previousTile = new(0,0);
         foreach (var location in md.visitedTiles)
         {
             //skip first tuple
             if (location.Item1 == md.startX && location.Item2 == md.startY)
             {
+                previousTile = location;
                 continue;
             }
             //add an item to the map.
@@ -128,26 +129,38 @@ internal class Day_06 : IDay
 
             md.yObstacles[location.Item2].Add(location.Item1);
             md.yObstacles[location.Item2] = md.yObstacles[location.Item2].OrderBy(num => num).ToList();
+
             //move the elf around the map again, but this time the tuple stores direction
-
-            var px = md.startX;
-            var py = md.startY;
+            //get the starting position from the previous location on the map and work out the direction from that tile to the current location
+            var px = previousTile.Item1;
+            var py = previousTile.Item2;
             var di = 0;
-            bool loopPresent = false;
-            HashSet<Tuple<int, int, int>> reVisited = new() { new Tuple<int, int, int>(px, py, di)};
+            //work out previous direction
+            var previousXDir = location.Item1 - previousTile.Item1;
+            if (previousXDir != 0)
+            {
+                di = previousXDir < 0 ? 3 : 1;
+            }
+            else
+            {
+                var previousYDir = location.Item2 - previousTile.Item2;
+                if (previousYDir != 0)
+                {
+                    di = previousYDir < 0 ? 0 : 2;
+                }
+            }
+            previousTile = location;
+            
+            HashSet<Tuple<int, int, int>> reVisited = new() { };
 
-            while (!loopPresent && px > 0 && px < md.mapWidth - 1 && py > 0 && py < md.mapHeight - 1)
+            while (px > 0 && px < md.mapWidth - 1 && py > 0 && py < md.mapHeight - 1)
             {
                 int distanceToObstacle = GetDistanceToNearestObstacle(md, px, py, di);
                 //move the player in direction until they hit an obstacle, then turn right
-                for (var i = 0; i < distanceToObstacle; ++i)
+                if (!reVisited.Add(new(px += _directions[di].x * distanceToObstacle, py += _directions[di].y * distanceToObstacle, di)))
                 {
-                    if (!reVisited.Add(new(px += _directions[di].x, py += _directions[di].y, di)))
-                    {
-                        loopPresent = true;
-                        ++count;
-                        break;
-                    }
+                    ++count;
+                    break;
                 }
                 di = (di + 1) % 4;
             }
