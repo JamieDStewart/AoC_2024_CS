@@ -22,13 +22,14 @@ internal class Day_06 : IDay
         return new Result("6.Guard Gallivant", part01, part02, time);
     }
 
+
     //Input is a map of  '.' and '#' with '^' as the starting location
     //Only cardinal travel directions are allowed, keep two dictionaries of (x, set<y>) and (y, <set<x>)
     //keep two vars for the location of the grid size and the player location
     private MapData ReadFileData()
     {
         MapData md = new();
-        using (var read = new StreamReader("./input/day_06.txt"))
+        using (var read = new StreamReader("./sample/day_06.txt"))
         {
             int y = 0;
             for (var line = read.ReadLine(); line != null; line = read.ReadLine())
@@ -37,6 +38,7 @@ internal class Day_06 : IDay
                 md.yObstacles.Add(y, new List<int>());
                 for (int x = 0; x < line.Length; ++x)
                 {
+                    
                     if ( !md.xObstacles.ContainsKey(x) )
                     {
                         md.xObstacles.Add(x, new List<int>());

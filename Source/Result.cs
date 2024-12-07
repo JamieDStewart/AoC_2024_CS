@@ -23,7 +23,7 @@ internal struct Result
         sb.Append("||");
         sb.Append(name.PadRight(23));
         sb.Append("||");
-        sb.Append(part_01.ToString().PadRight(12));
+        sb.Append(part_01.ToString().PadRight(15));
         sb.Append("||");
         sb.Append(part_02.ToString().PadRight(15));
         sb.Append("||");
