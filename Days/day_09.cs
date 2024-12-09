@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic.CompilerServices;
@@ -39,26 +40,15 @@ internal class Day_09 : IDay
     private long SolvePart1(List<int> dm)
     {
         //modify the disk map to individual blocks and empty spaces
-        var fileId = 0;
         var blockMap = new List<int>();
         for (var i = 0; i < dm.Count; ++i)
         {
-            if (i % 2 == 1) // odd locations are empty spaces
+            var fileId = (i % 2 == 0) ? i / 2 : -1;
+            for (var j = 0; j < dm[i]; ++j)
             {
-                for (var j = 0; j < dm[i]; ++j)
-                {
-                    blockMap.Add(-1);
-                }
+                blockMap.Add(fileId);
             }
-            else
-            {
-                for (int j = 0; j < dm[i]; ++j)
-                {
-                    blockMap.Add(fileId);
-                }
-
-                fileId++;
-            }
+            
         }
         //restructure block layout to remove empty spaces with data from end of block
         var lastIndex = blockMap.Count;
@@ -68,22 +58,16 @@ internal class Day_09 : IDay
             if (blockMap[i] == -1)
             {
                 //find the last index in the file that is not -1 and swap these two values
-                for (var j = lastIndex - 1; j > 0; --j)
+                for (var j = lastIndex - 1; j > i; --j)
                 {
-                    if (blockMap[j] != -1 )
-                    {
-                        lastIndex = j;
-                        break;
-                    }
-                }
-
-                if (lastIndex > i)
-                {
-                    (blockMap[i], blockMap[lastIndex]) = (blockMap[lastIndex], blockMap[i]);
+                    if (blockMap[j] == -1) continue;
+                    (blockMap[i], blockMap[j]) = (blockMap[j], blockMap[i]);
+                    lastIndex = j;
+                    total += i * blockMap[i];
+                    break;
                 }
             }
-
-            if (blockMap[i] != -1)
+            else
             {
                 total += i * blockMap[i];
             }
@@ -94,83 +78,72 @@ internal class Day_09 : IDay
     private long SolvePart2(List<int> dm)
     {
         //modify the disk map to individual blocks and empty spaces
-        var fileId = 0;
-        var blockMap = new List<int>();
+        var freespaces = new List<FreeSpace>();
+        var usedBlocks = new List<UsedSpace>();
+        var index = 0;
         for (var i = 0; i < dm.Count; ++i)
         {
-            if (i % 2 == 1) // odd locations are empty spaces
+            var fileId = (i % 2 == 0) ? i / 2 : -1;
+            if (fileId == -1)
             {
-                for (var j = 0; j < dm[i]; ++j)
-                {
-                    blockMap.Add(-1);
-                }
+                freespaces.Add(new(index, dm[i]));
             }
             else
             {
-                for (var j = 0; j < dm[i]; ++j)
-                {
-                    blockMap.Add(fileId);
-                }
-
-                fileId++;
+                usedBlocks.Add(new(index, fileId, dm[i]));
             }
+
+            index += dm[i];
         }
-        //Rules state that we start with last block and attempt to move to first available slot that is large enough to hold it
-        //If no blocks large enough then this block does not move.
-        var lastBlock = blockMap.Count;
-        for (var i = lastBlock-1; i >= 0; )
-        {
-            if (blockMap[i] != -1) // Found first block that isn't empty now get size of block
-            {
-                var blockSize = 1;
-                while (i - blockSize >= 0 && blockMap[i - blockSize] == blockMap[i])
-                {
-                    blockSize++;
-                }
-
-                var blockStart = i - (blockSize-1);
-                //Size of block acquired now find free block that will fit
-                for (var j = 0; j < blockStart; ++j)
-                {
-                    if (blockMap[j] == -1) //found free space get size of space
-                    {
-                        var freeSpace = 1;
-                        while (j + freeSpace < blockStart && blockMap[j + freeSpace] == blockMap[j])
-                        {
-                            freeSpace++;
-                        }
-
-                        if (freeSpace >= blockSize) //block can be moved here
-                        {
-                            for (int p = 0; p < blockSize; ++p)
-                            {
-                                (blockMap[blockStart + p], blockMap[j+p]) = (blockMap[j+p], blockMap[blockStart + p]);
-                            }
-
-                            break;
-                        }
-                        j += freeSpace;
-                        
-                    }
-                }
-
-                i -= blockSize;
-            }
-            else
-            {
-                --i;
-            }
-        }
-
+        //reverse the memory blocks 
+        usedBlocks.Reverse();
         long total = 0;
-        for (var i = 0; i < blockMap.Count; i++)
+        foreach (var b in usedBlocks) // iterate over all blocks
         {
-            if (blockMap[i] != -1)
+            foreach (var f in freespaces) //find free space large enough to move block to
             {
-                total += i * blockMap[i];
+                if (f.Location > b.Location) break; //early out on the iteration
+                if (f.Size >= b.Size )
+                {
+                    b.Location = f.Location;
+                    f.Size -= b.Size;
+                    f.Location += b.Size;
+                }
+            }
+
+            for (var i = b.Location; i < b.Location + b.Size; ++i)
+            {
+                total += i * b.FileId;
             }
         }
+
         return total;
+    }
+
+    private class FreeSpace
+    {
+        public int Location = 0;
+        public int Size = 0;
+
+        public FreeSpace(int location, int size)
+        {
+            Location = location;
+            Size = size;
+        }
+    }
+
+    private class UsedSpace
+    {
+        public int Location = 0;
+        public int FileId = 0;
+        public int Size = 0;
+
+        public UsedSpace(int location, int fileId, int size)
+        {
+            Location = location;
+            FileId = fileId;
+            Size = size;
+        }
     }
 
 }
