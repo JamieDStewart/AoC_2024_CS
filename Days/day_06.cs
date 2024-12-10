@@ -191,7 +191,7 @@ internal class Day_06 : IDay
 
     
 
-struct Direction
+    struct Direction
     {
         public int x;
         public int y;
