@@ -94,8 +94,6 @@ internal class Day_10 : IDay
                     openList.AddRange(neighbours);
                 }
                 openList.RemoveAt(0);
-                //sort the list to the smallest value in map first
-                openList.Sort((a, b) => map.data[a.Item2][a.Item1].CompareTo(map.data[b.Item2][b.Item1]));
             }
 
             part1Total += validPaths.Count;
