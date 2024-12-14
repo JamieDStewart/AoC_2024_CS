@@ -29,7 +29,7 @@ internal class Day_09 : IDay
     {
         using (var read = new StreamReader("./input/day_09.txt"))
         {
-            for (var line = read.ReadLine(); line != null; line = read.ReadLine())
+            for (var line = read.ReadLine(); line != null; )
             {
                return line.ToList().Select(p => p - '0').ToList();
             }

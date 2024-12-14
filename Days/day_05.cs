@@ -102,7 +102,6 @@ internal class Day_05 : IDay
         long count = 0;
         foreach (var invalidJob in up.invalidUpdates)
         {
-            var printedPagesIndex = new int[100];
             var sortedList = new List<int>();
             //for each page in the job if a page has already been printed that breaks the rule find that page in the job and swap them
             foreach (var page in invalidJob)
