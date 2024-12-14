@@ -81,6 +81,7 @@ internal class Day_14 : IDay
     {
         long part2Total = 0;
         var mostSeen = 0;
+        //When the christmas tree is visible this requires the most number of robots to be visible
         var positions = new HashSet<(int, int)>();
         //take the highest number of different frames as mapWidth * mapHeight
         //After frames width*height all robots are back in their starting positions
@@ -89,9 +90,8 @@ internal class Day_14 : IDay
             //create a grid for the robots
             foreach(var robot in robots)
             {
-                //100 seconds of iteration
-                var (x, y) = ((robot.Position.Item1 + robot.Velocity.Item1 ) % mapWidth,
-                    (robot.Position.Item2 + robot.Velocity.Item2) % mapHeight);
+                var (x, y) = ( (robot.Position.Item1 + robot.Velocity.Item1 ) % mapWidth,
+                                      (robot.Position.Item2 + robot.Velocity.Item2) % mapHeight);
                 //adjust if heading in negative direction
                 if (x < 0){ x = mapWidth + x; }
                 if (y < 0){ y = mapHeight + y; }
@@ -108,6 +108,7 @@ internal class Day_14 : IDay
                 part2Total = c;
             }
             positions.Clear();
+            if (totalShown == robots.Count) break;
         }
 
         return part2Total;
