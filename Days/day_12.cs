@@ -123,7 +123,7 @@ internal class Day_12 : IDay
             foreach (var plot in plantType)
             {
                 var plants = plot.Item2;
-                SortedSet<(int, int)>[] fences = Enumerable.Range(0, 4).Select(_ => new SortedSet<(int, int)>()).ToArray();
+                HashSet<(int, int)>[] fences = Enumerable.Range(0, 4).Select(_ => new HashSet<(int, int)>()).ToArray();
                 foreach (var p in plants)
                 {
                     //Get each neighbour north, east, west, south
@@ -136,7 +136,7 @@ internal class Day_12 : IDay
                             if (d == 0 || d == 2)
                                 fences[d].Add(p);
                             else
-                                fences[d].Add((p.Item2, p.Item1)); //reverse to sort by y.
+                                fences[d].Add((p.Item2, p.Item1)); //reverse to test by y.
                         }
                     }
                 }
@@ -146,7 +146,7 @@ internal class Day_12 : IDay
                 {
                     foreach (var i in f)
                     {
-                        //if this set contains items that are next to each other only count the first one
+                        //if this set contains items that are next to each other only count one of those sides
                         var p = (i.Item1 - 1, i.Item2); 
                         if (!f.Contains(p) ) { ++sides; }
                     }
