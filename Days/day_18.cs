@@ -84,15 +84,14 @@ internal class Day_18 : IDay
         
         long totalCost = 0;
         //tuple is x, y, cost
-        var openList = new List<(int, int, int, int, int)>() { (0, 0, 0, -1, -1) };
-        
+        var openList = new Stack<(int, int, int, int, int)>();
+        openList.Push((0, 0, 0, -1, -1));
         var closedList = new List<(int, int)>(); //to improve speed of detecting an item has been visited use this close list 
         var endPoint = (_mapSize - 1, _mapSize - 1);
         while (openList.Count > 0)
         {
             //walk the maze
-            var o = openList[0];
-            openList.RemoveAt(0);
+            var o = openList.Pop();
             _ParentList.Add((o.Item1, o.Item2, o.Item4, o.Item5));
             closedList.Add((o.Item1, o.Item2));
             var currentPos = (o.Item1, o.Item2);
@@ -107,30 +106,10 @@ internal class Day_18 : IDay
                 if (!closedList.Contains(n)) //if we haven't been to this neighbour already
                 {
                     var cost = 1 + o.Item3;
-                    //find in open list
-                    var located = false;
-                    for (var i = 1; i < openList.Count; ++i)
-                    {
-                        var opos = (openList[i].Item1, openList[i].Item2);
-                        if (opos == n)
-                        {
-                            located = true;
-                            if (cost < openList[i].Item3)
-                            {
-                                openList.RemoveAt(i);
-                                //add to the open list
-                                openList.Add((n.Item1, n.Item2, cost, o.Item1, o.Item2));
-                                break;
-                            }
-                        }
-                    }
-
-                    if (located == false)
-                        //add to the open list
-                        openList.Add((n.Item1, n.Item2, cost, o.Item1, o.Item2));
+                    //add to the open list
+                    openList.Push((n.Item1, n.Item2, cost, o.Item1, o.Item2));
                     
                 }
-            openList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
         }
         return totalCost;
     }
@@ -167,6 +146,7 @@ internal class Day_18 : IDay
             _map[y][x] = '#';
             if (path.Contains((x, y))) ;
             {
+                path.Remove((x, y));
                 var neighbours = GetNeighbours((x, y));
                 if (neighbours.Count < 3)
                 {
