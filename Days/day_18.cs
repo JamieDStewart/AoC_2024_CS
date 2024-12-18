@@ -167,13 +167,18 @@ internal class Day_18 : IDay
             _map[y][x] = '#';
             if (path.Contains((x, y))) ;
             {
-                //dropped tile on the path re-acquire path if possible
-                if( SolvePart1(i) == 0 )
+                var neighbours = GetNeighbours((x, y));
+                if (neighbours.Count < 3)
                 {
-                    //no path possible
-                    return _bytes[i];
+                    //dropped tile on the path re-acquire path if possible
+                    if (SolvePart1(i) == 0)
+                    {
+                        //no path possible
+                        return _bytes[i];
+                    }
+
+                    path = GetPath();
                 }
-                path = GetPath();
             }
         }
         return (-1,-1);
