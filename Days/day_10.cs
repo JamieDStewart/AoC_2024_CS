@@ -22,7 +22,7 @@ internal class Day_10 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("10.Hoof It", part01.Item1, part01.Item2, time);
+        return new Result("10.Hoof It", part01.Item1.ToString(), part01.Item2.ToString(), time);
     }
 
     private Map ReadFileData()

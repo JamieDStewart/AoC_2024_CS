@@ -10,7 +10,7 @@ internal class Program
     private const string part_2 = "Part 2";
     private const string time = "Time";
 
-    private static readonly string separator = new('=', 73);
+    private static readonly string separator = new('=', 87);
 
     private static void Main(string[] args)
     {
@@ -40,17 +40,17 @@ internal class Program
         sb.Append(separator);
         sb.AppendLine();
         sb.Append("||");
-        sb.Append(AoC.PadLeft(43).PadRight(69));
+        sb.Append(AoC.PadLeft(53).PadRight(83));
         sb.Append("||");
         sb.AppendLine();
         sb.Append(separator);
         sb.AppendLine();
         sb.Append("||");
-        sb.Append(day_title.PadRight(23));
+        sb.Append(day_title.PadRight(27));
         sb.Append("||");
-        sb.Append(part_1.PadRight(15));
+        sb.Append(part_1.PadRight(20));
         sb.Append("||");
-        sb.Append(part_2.PadRight(15));
+        sb.Append(part_2.PadRight(20));
         sb.Append("||");
         sb.Append(time.PadRight(10));
         sb.Append("||");

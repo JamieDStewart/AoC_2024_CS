@@ -17,7 +17,7 @@ internal class Day_02 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("2.Red-Nosed Reports", part_01, part_02, time);
+        return new Result("2.Red-Nosed Reports", part_01.ToString(), part_02.ToString(), time);
     }
 
     private List<Record> ReadFileData()

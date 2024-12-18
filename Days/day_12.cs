@@ -24,7 +24,7 @@ internal class Day_12 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("12.Garden Groups", part01, part02, time);
+        return new Result("12.Garden Groups", part01.ToString(), part02.ToString(), time);
     }
 
     

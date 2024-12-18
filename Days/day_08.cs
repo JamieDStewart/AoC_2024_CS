@@ -20,7 +20,7 @@ internal class Day_08 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("8.Resonant Collinearity", part01, part02, time);
+        return new Result("8.Resonant Collinearity", part01.ToString(), part02.ToString(), time);
     }
 
     class MapData

@@ -29,7 +29,7 @@ internal class Day_16 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("16.Reindeer Maze", part01[0].Item3, part02, time);
+        return new Result("16.Reindeer Maze", part01[0].Item3.ToString(), part02.ToString(), time);
     }
 
 

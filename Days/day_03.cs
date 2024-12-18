@@ -18,7 +18,7 @@ internal class Day_03 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("3.Mull It Over", part_01, part_02, time);
+        return new Result("3.Mull It Over", part_01.ToString(), part_02.ToString(), time);
     }
 
     private Input ReadFileData()

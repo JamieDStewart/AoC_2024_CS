@@ -19,7 +19,7 @@ internal class Day_06 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("6.Guard Gallivant", part01, part02, time);
+        return new Result("6.Guard Gallivant", part01.ToString(), part02.ToString(), time);
     }
 
 

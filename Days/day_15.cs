@@ -25,7 +25,7 @@ internal class Day_15 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("15.Warehouse Woes", part01, part02, time);
+        return new Result("15.Warehouse Woes", part01.ToString(), part02.ToString(), time);
     }
 
 

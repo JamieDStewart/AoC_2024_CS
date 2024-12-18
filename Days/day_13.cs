@@ -23,7 +23,7 @@ internal class Day_13 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("13.Claw Contraption", part01, (long)part02, time);
+        return new Result("13.Claw Contraption", part01.ToString(), part02.ToString(), time);
     }
 
 

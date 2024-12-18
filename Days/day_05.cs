@@ -18,7 +18,7 @@ internal class Day_05 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("5.Print Queue", part01, part02, time);
+        return new Result("5.Print Queue", part01.ToString(), part02.ToString(), time);
     }
 
     private Updates ReadFileData()

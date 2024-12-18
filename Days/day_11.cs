@@ -22,7 +22,7 @@ internal class Day_11 : IDay
         sw.Stop();
 
         var time = sw.ElapsedMilliseconds / 1000.0;
-        return new Result("11.Plutonian Pebbles", part01, part02, time);
+        return new Result("11.Plutonian Pebbles", part01.ToString(), part02.ToString(), time);
     }
 
     private List<long> ReadFileData()
