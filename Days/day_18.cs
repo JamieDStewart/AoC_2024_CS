@@ -27,16 +27,9 @@ internal class Day_18 : IDay
         return new Result("18.RAM Run", part01.ToString(), part2String, time);
     }
 
-    private readonly List<char[]> _map = new();
-    private int _mapSize = 71;
     private void ReadFileData()
     {
-        //construct the empty_map
         
-        for( var y =  0; y < _mapSize; y++)
-        {
-            _map.Add(Enumerable.Repeat('.', _mapSize).ToArray());
-        }
         //Each line of file is "p=0,4 v=3,-3" p is position, v is velocity
         using (var read = new StreamReader("./input/day_18.txt"))
         {
@@ -47,18 +40,12 @@ internal class Day_18 : IDay
                 _bytes.Add((int.Parse(coordinates[0]), int.Parse(coordinates[1]) ));
             }
         }
-
-        //populate the map with x number of memory blocks
-        for (int i = 0; i < 1024; ++i)
-        {
-            var (x, y) = _bytes[i];
-            _map[y][x] = '#';
-        }
+        
     }
 
     
 
-    private List<(int, int)> GetNeighbours((int, int) point)
+    private List<(int, int)> GetNeighbours(List<char[]> _map, (int, int) point)
     {
         var neighbours = new List<(int, int)>();
         foreach (var d in _directions)
@@ -80,6 +67,19 @@ internal class Day_18 : IDay
     private List<(int, int,int,int)> _ParentList = new List<(int, int, int, int)>();
     private long SolvePart1(int byteCount = 1024)
     {
+        //construct the empty_map
+        var _map = new List<char[]>();
+        for (var y = 0; y < 71; y++)
+        {
+            _map.Add(Enumerable.Repeat('.', 71).ToArray());
+        }
+        //populate the map with x number of memory blocks
+        for (int i = 0; i < byteCount; ++i)
+        {
+            var (x, y) = _bytes[i];
+            _map[y][x] = '#';
+        }
+
         _ParentList.Clear();
         
         long totalCost = 0;
@@ -87,7 +87,7 @@ internal class Day_18 : IDay
         var openList = new Stack<(int, int, int, int, int)>();
         openList.Push((0, 0, 0, -1, -1));
         var closedList = new List<(int, int)>(); //to improve speed of detecting an item has been visited use this close list 
-        var endPoint = (_mapSize - 1, _mapSize - 1);
+        var endPoint = (71 - 1, 71 - 1);
         while (openList.Count > 0)
         {
             //walk the maze
@@ -101,7 +101,7 @@ internal class Day_18 : IDay
                 break;
             }
 
-            var neighbours = GetNeighbours((o.Item1, o.Item2));
+            var neighbours = GetNeighbours(_map,(o.Item1, o.Item2));
             foreach (var n in neighbours)
                 if (!closedList.Contains(n)) //if we haven't been to this neighbour already
                 {
@@ -140,28 +140,25 @@ internal class Day_18 : IDay
     private (int,int) SolvePart2()
     {
         var path = GetPath();
-        for( int i = 1024; i < _bytes.Count; ++i)
-        {
-            var(x,y) = _bytes[i];
-            _map[y][x] = '#';
-            if (path.Contains((x, y))) ;
-            {
-                path.Remove((x, y));
-                var neighbours = GetNeighbours((x, y));
-                if (neighbours.Count < 3)
-                {
-                    //dropped tile on the path re-acquire path if possible
-                    if (SolvePart1(i) == 0)
-                    {
-                        //no path possible
-                        return _bytes[i];
-                    }
+        var head = 1024;
+        var tail = _bytes.Count;
 
-                    path = GetPath();
-                }
+        while (tail - head > 1)
+        {
+            //find the mid point and fill the map
+            var mid = head + (tail - head) / 2;
+            
+            if (SolvePart1(mid) == 0) //attempt to solve if it failed then move end
+            {
+                tail = mid;
             }
+            else //move head
+            {
+                head = mid;
+            }
+            
         }
-        return (-1,-1);
+        return _bytes[head];
     }
 
 
